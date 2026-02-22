@@ -117,7 +117,7 @@ public class ProductoRepositoryTest extends TestBase {
         
         productoRepository.save(prodModificado);
 
-        assertEquals(nuevoNombre, productoRepository.findById(productoGuardado.getId()).get().getNombre());
+        assertEquals(nuevoNombre.trim().toLowerCase(), productoRepository.findById(productoGuardado.getId()).get().getNombre());
         assertEquals(nuevoPrecio, productoRepository.findById(productoGuardado.getId()).get().getPrecio());
         assertEquals(nuevaCategoria.getCategoria(), productoRepository.findById(productoGuardado.getId()).get().getCategoria());
 

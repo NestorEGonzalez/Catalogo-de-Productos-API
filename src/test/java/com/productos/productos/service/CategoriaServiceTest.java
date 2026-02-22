@@ -3,7 +3,6 @@ package com.productos.productos.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +49,7 @@ public class CategoriaServiceTest{
     @Test
     void test01_sePuedeGuardarUnaCategoriaYSeRetonarLaCategoriaGuardada(){
 
-        when(categoriaRepository.existsByNombre(nombreCategoria)).thenReturn(false);
+        when(categoriaRepository.existsByCategoria(nombreCategoria)).thenReturn(false);
 
         when(categoriaRepository.save(any(Categoria.class))).thenReturn(categoria);
 
@@ -65,7 +64,7 @@ public class CategoriaServiceTest{
     @Test
     void test02_alGuardarUnaCategoriaExistenteSeLanzaUnError(){
 
-        when(categoriaRepository.existsByNombre(nombreCategoria)).thenReturn(true);
+        when(categoriaRepository.existsByCategoria(nombreCategoria)).thenReturn(true);
 
         assertThrows(ErrorCategoriaYaExistente.class,()->{
             categoriaService.crearCategoria(nombreCategoria);
@@ -128,7 +127,7 @@ public class CategoriaServiceTest{
         String nombreNuevo = "Nuevo";
         
         when(categoriaRepository.findOneByCategoria(nombreCategoria)).thenReturn(Optional.of(categoria));
-        when(categoriaRepository.existsByNombre(nombreNuevo)).thenReturn(false);
+        when(categoriaRepository.existsByCategoria(nombreNuevo)).thenReturn(false);
 
         categoriaService.cambiarNombreDeCategoria(nombreCategoria,nombreNuevo);
 
@@ -142,8 +141,8 @@ public class CategoriaServiceTest{
     void test08_noSePuedeModificarElNombreDeUnaCategoriaExistenteSiElNombreYaExiste(){
         String nuevoNombre = nombreCategoria;
         Categoria nuevaCat = new Categoria(nuevoNombre);
-        when(categoriaRepository.existsByNombre(nombreCategoria)).thenReturn(true);
-        when(categoriaRepository.existsByNombre(nuevoNombre)).thenReturn(true);
+        when(categoriaRepository.existsByCategoria(nombreCategoria)).thenReturn(true);
+        when(categoriaRepository.existsByCategoria(nuevoNombre)).thenReturn(true);
 
         assertThrows(RuntimeException.class,()->{
             categoriaService.cambiarNombreDeCategoria(nombreCategoria, nuevoNombre);

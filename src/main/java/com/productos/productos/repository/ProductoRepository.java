@@ -21,11 +21,13 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     @Query("SELECT p from Producto p JOIN FETCH p.categoria WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%',:nombre,'%'))")    
     List<Producto> buscarPorNombreConCategoria(@Param("nombre") String nombre);
-    //List<Producto> findByNombreContainingIgnoreCase(String nombre);
 
     Optional<Producto> findOneByNombreIgnoreCase(String nombre);
-    
-    //@Query("SELECT Producto p WHERE p.nombre LIKE '%:nombre%'")
-    //List<Producto> buscarProductosQueContenga(@Param("nombre") String nombre);
+
+    boolean existsByNombre(String nombre);
+
+    List<Producto> findAllByCategoria(Categoria categoria);
+
+    List<Producto> findByNombreContainingIgnoreCase(String nombre);
     
 }

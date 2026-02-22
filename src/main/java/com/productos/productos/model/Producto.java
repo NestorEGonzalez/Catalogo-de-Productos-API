@@ -56,9 +56,10 @@ public class Producto {
         return this.categoria != null ? this.categoria.getCategoria(): null;
     }
 
+
     public void setNombre(String nombre){
         validarNombre(nombre);
-        this.nombre = nombre;
+        this.nombre = nombre.trim().toLowerCase();
 
     }
 
@@ -91,4 +92,5 @@ public class Producto {
     public Long getId() {
         return this.id;
     }
+
 }

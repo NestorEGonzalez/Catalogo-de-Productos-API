@@ -1,5 +1,6 @@
 package com.productos.productos.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -24,13 +25,11 @@ public class CategoriaService {
     @Transactional
     public Categoria crearCategoria(String nombreCategoria) {
         verificarCategoriaExistente(nombreCategoria);
-        
-        //Categoria cat = new Categoria(nombreCategoria);
         return categoriaRepository.save(new Categoria(nombreCategoria));
     }
 
     private void verificarCategoriaExistente(String nombre) {
-        if (categoriaRepository.existsByNombre(nombre)) {
+        if (categoriaRepository.existsByCategoria(nombre)) {
             throw new ErrorCategoriaYaExistente(nombre);
         }
         
@@ -55,7 +54,6 @@ public class CategoriaService {
 
     @Transactional
     public void cambiarNombreDeCategoria(String nombreActual, String nombreNuevo) {
-        //verificarCategoriaExistente(nombreNuevo);
         verificarCategoriaExistente(nombreNuevo);
         Categoria cat = categoriaRepository
                             .findOneByCategoria(nombreActual)
@@ -64,6 +62,10 @@ public class CategoriaService {
                             });
         cat.setCategoria(nombreNuevo);
         categoriaRepository.save(cat);
+    }
+
+    public List<Categoria> obtenerTodasLasCategorias() {
+        return categoriaRepository.findAll();
     }
 
 }
