@@ -72,9 +72,9 @@ public class ProductoServiceTest {
         Producto prodDelService = productoService.crearProducto(nombreProd,precio,idCat);
 
         assertNotNull(prodDelService);
-        assertEquals(nombreProd.toLowerCase(), prodDelService.getNombre());
+        assertEquals(nombreProd.trim().toLowerCase(), prodDelService.getNombre());
         assertEquals(precio, prodDelService.getPrecio());
-        assertEquals(nombreCat, prodDelService.getCategoria());
+        assertEquals(nombreCat.trim().toLowerCase(), prodDelService.getCategoria());
         verify(productoRepository, times(1)).save(any(Producto.class));
     }
 
@@ -106,7 +106,7 @@ public class ProductoServiceTest {
     void test_NoSePuedeBorrarUnProductoQueNoExiste(){
         Long idProd = 1L;
         
-        String mensajeEsperado ="El producto con id "+idProd+", no existe.";
+        //String mensajeEsperado ="El producto con id "+idProd+", no existe.";
 
         when(productoRepository.existsById(idProd)).thenReturn(false);
 
@@ -137,16 +137,16 @@ public class ProductoServiceTest {
 
     when(categoriaRepository.findById(idCatNueva)).thenReturn(Optional.of(catNueva));
 
-    when(productoRepository.existsByNombre(nombreNuevo)).thenReturn(false);
+    when(productoRepository.existsByNombre(nombreNuevo.trim().toLowerCase())).thenReturn(false);
 
 
     productoService.cambiarNombreDeProducto(idProd, nombreNuevo);
     productoService.cambiarPrecioDeProducto(idProd, precioNuevo);
     productoService.cambiarCategoriaDeProducto(idProd, idCatNueva);
 
-    assertEquals(nombreNuevo.toLowerCase(), producto.getNombre());
+    assertEquals(nombreNuevo.trim().toLowerCase(), producto.getNombre());
     assertEquals(precioNuevo, producto.getPrecio());
-    assertEquals(nombreCatNuevo, producto.getCategoria());
+    assertEquals(nombreCatNuevo.trim().toLowerCase(), producto.getCategoria());
 
     
     verify(productoRepository, atLeastOnce()).save(producto);
@@ -170,7 +170,7 @@ public class ProductoServiceTest {
 
         when(productoRepository.findById(idProd)).thenReturn(Optional.of(prodDelService));
 
-        when(productoRepository.existsByNombre(nombreNuevo)).thenReturn(true);
+        when(productoRepository.existsByNombre(nombreNuevo.trim().toLowerCase())).thenReturn(true);
 
         assertThrows(ErrorNombreProductoExistente.class,()->{
             productoService.cambiarNombreDeProducto(idProd, nombreNuevo);

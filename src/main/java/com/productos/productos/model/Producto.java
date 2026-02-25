@@ -64,7 +64,7 @@ public class Producto {
     }
 
     private void validarNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty() || nombre.isBlank()) {
+        if (nombre == null|| nombre.isEmpty() || nombre.isBlank()) {
             throw new ErrorCampoVacioONulo(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO);
         }
         

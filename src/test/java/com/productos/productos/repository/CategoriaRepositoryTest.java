@@ -73,7 +73,7 @@ public class CategoriaRepositoryTest extends TestBase{
     void test04_sePuedeBuscarUnaCategoriaPorNombreYObtenerSuId(){
         Categoria categoriaGuardada = categoriaRepository.save(categoria);
         
-        Categoria categoriaEncontrada = categoriaRepository.findOneByCategoria(nombreCategoria).get();
+        Categoria categoriaEncontrada = categoriaRepository.findOneByCategoriaIgnoreCase(nombreCategoria).get();
         assertEquals(categoriaGuardada.getId(), categoriaEncontrada.getId());
     }
 

@@ -29,14 +29,14 @@ public class CategoriaService {
     }
 
     private void verificarCategoriaExistente(String nombre) {
-        if (categoriaRepository.existsByCategoria(nombre)) {
-            throw new ErrorCategoriaYaExistente(nombre);
+        if (categoriaRepository.existsByCategoria(nombre.trim().toLowerCase())) {
+            throw new ErrorCategoriaYaExistente(nombre.trim().toLowerCase());
         }
         
     }
 
 	public Optional<Categoria> buscarCategoriaPorNombre(String nombreCategoria) {
-		return categoriaRepository.findOneByCategoria(nombreCategoria);
+		return categoriaRepository.findOneByCategoriaIgnoreCase(nombreCategoria);
 	}
 
     @Transactional
@@ -56,7 +56,7 @@ public class CategoriaService {
     public void cambiarNombreDeCategoria(String nombreActual, String nombreNuevo) {
         verificarCategoriaExistente(nombreNuevo);
         Categoria cat = categoriaRepository
-                            .findOneByCategoria(nombreActual)
+                            .findOneByCategoriaIgnoreCase(nombreActual)
                             .orElseThrow(()->{
                                 throw new  ErrorNombreDeCategoriaInexistente(nombreActual);
                             });
@@ -64,8 +64,31 @@ public class CategoriaService {
         categoriaRepository.save(cat);
     }
 
+    @Transactional
+    public Categoria cambiarNombreDeCategoriaPorId(Long id, String nombreNuevo){
+        Categoria cat = categoriaRepository
+                        .findById(id)
+                        .orElseThrow(()->{
+                            throw new ErrorCategoriaInexistente(id);
+                        });
+        verificarCategoriaExistente(nombreNuevo);
+        cat.setCategoria(nombreNuevo);
+        return categoriaRepository.save(cat);
+    }
+
     public List<Categoria> obtenerTodasLasCategorias() {
         return categoriaRepository.findAll();
+    }
+
+    public List<Categoria> buscarCategoriasQueContengan(String cat) {
+        return categoriaRepository.findAllByCategoriaContainingIgnoreCase(cat);
+    }
+
+    public Categoria buscarCategoriaPorId(Long id) {
+        Categoria cat = categoriaRepository.findById(id).orElseThrow(()->{
+            throw new ErrorCategoriaInexistente(id);
+        });
+        return cat;
     }
 
 }

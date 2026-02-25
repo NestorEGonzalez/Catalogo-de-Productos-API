@@ -44,7 +44,7 @@ public class CategoriaServiceTestIT extends TestBase {
     void test02_noSeGuardaUnaCategoriaQueYaExiste(){
         categoriaService.crearCategoria(nombreCategoria);
     
-        String mensajeEsperado = "La categoria "+ nombreCategoria + ", ya existe.";
+        String mensajeEsperado = "La categoria "+ nombreCategoria.trim().toLowerCase() + ", ya existe.";
     
         Exception categoriaExistente = assertThrows(ErrorCategoriaYaExistente.class,()->{
             categoriaService.crearCategoria(nombreCategoria);
@@ -100,7 +100,7 @@ public class CategoriaServiceTestIT extends TestBase {
         assertEquals(1,categoriaService.obtenerTodasLasCategorias().size());
 
         String nombre = nombreCategoria;
-        String mensajeEsperado = "La categoria "+ nombre + ", ya existe.";
+        String mensajeEsperado = "La categoria "+ nombre.trim().toLowerCase() + ", ya existe.";
         
         Exception errorCatExistente = assertThrows(ErrorCategoriaYaExistente.class, ()->{
             categoriaService.cambiarNombreDeCategoria(nombreCategoria, nombre);

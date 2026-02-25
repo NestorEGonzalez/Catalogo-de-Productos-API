@@ -38,33 +38,35 @@ public class CategoriaServiceTest{
 
     String nombreCategoria;
     Categoria categoria;
+    Long id;
+    String nombreNuevo;
 
     @BeforeEach
     void setUp(){
         nombreCategoria = "Prueba";
         categoria = new Categoria(nombreCategoria);
+        id = 1L;
+        nombreNuevo = "Nuevo";
     }
 
 
     @Test
     void test01_sePuedeGuardarUnaCategoriaYSeRetonarLaCategoriaGuardada(){
-
-        when(categoriaRepository.existsByCategoria(nombreCategoria)).thenReturn(false);
+        when(categoriaRepository.existsByCategoria(nombreCategoria.trim().toLowerCase())).thenReturn(false);
 
         when(categoriaRepository.save(any(Categoria.class))).thenReturn(categoria);
 
         Categoria categoriaDelService = categoriaService.crearCategoria(nombreCategoria);
 
         assertNotNull(categoriaDelService);
-        assertEquals(nombreCategoria, categoriaDelService.getCategoria());
+        assertEquals(nombreCategoria.trim().toLowerCase(), categoriaDelService.getCategoria());
 
         verify(categoriaRepository, times(1)).save(any(Categoria.class));
     }
 
     @Test
     void test02_alGuardarUnaCategoriaExistenteSeLanzaUnError(){
-
-        when(categoriaRepository.existsByCategoria(nombreCategoria)).thenReturn(true);
+        when(categoriaRepository.existsByCategoria(nombreCategoria.trim().toLowerCase())).thenReturn(true);
 
         assertThrows(ErrorCategoriaYaExistente.class,()->{
             categoriaService.crearCategoria(nombreCategoria);
@@ -74,33 +76,25 @@ public class CategoriaServiceTest{
 
     @Test
     void test03_sePuedeObtenerUnaCategoriaPorSuNombre(){
-
-        when(categoriaRepository.findOneByCategoria(nombreCategoria)).thenReturn(Optional.of(categoria));
+        when(categoriaRepository.findOneByCategoriaIgnoreCase(nombreCategoria)).thenReturn(Optional.of(categoria));
     
         Optional<Categoria> catEncontrada = categoriaService.buscarCategoriaPorNombre(nombreCategoria);
 
         assertNotNull(catEncontrada);
-        assertEquals(nombreCategoria,catEncontrada.get().getCategoria());
+        assertEquals(nombreCategoria.trim().toLowerCase(),catEncontrada.get().getCategoria());
         
     }
 
     @Test
-    void test04_siElNombreDeUnaCategoriaNoExisteObtengoNull(){
-        
-        //when(categoriaRepository.existsByNombre(nombreCategoria)).thenReturn(false);
-    
+    void test04_siElNombreDeUnaCategoriaNoExisteObtengoNull(){        
         Optional<Categoria> catEncontrada = categoriaService.buscarCategoriaPorNombre(nombreCategoria);
 
-        //assertNull(catEncontrada);
         assertFalse(catEncontrada.isPresent());
     }
 
     @Test
     void test05_sePuedeBorrarUnaCategoriaExistente(){
-        
-        Long id = 1L;
-
-        when(categoriaRepository.existsById(id)).thenReturn(true);
+    when(categoriaRepository.existsById(id)).thenReturn(true);
 
         categoriaService.eliminarCategoria(id);
 
@@ -110,8 +104,6 @@ public class CategoriaServiceTest{
 
     @Test
     void test06_noSePuedeBorrarUnaCategoriaInexistente(){
-        Long id = 1L;
-
         when(categoriaRepository.existsById(id)).thenReturn(false);
 
         assertThrows(ErrorCategoriaInexistente.class, ()->{
@@ -123,15 +115,13 @@ public class CategoriaServiceTest{
     }
 
     @Test
-    void test07_sePuedeModificarElNombreDeUnaCategoriaExistente(){
-        String nombreNuevo = "Nuevo";
-        
-        when(categoriaRepository.findOneByCategoria(nombreCategoria)).thenReturn(Optional.of(categoria));
-        when(categoriaRepository.existsByCategoria(nombreNuevo)).thenReturn(false);
+    void test07_sePuedeModificarElNombreDeUnaCategoriaExistente(){        
+        when(categoriaRepository.findOneByCategoriaIgnoreCase(nombreCategoria)).thenReturn(Optional.of(categoria));
+        when(categoriaRepository.existsByCategoria(nombreNuevo.trim().toLowerCase())).thenReturn(false);
 
         categoriaService.cambiarNombreDeCategoria(nombreCategoria,nombreNuevo);
 
-        assertEquals(nombreNuevo, categoria.getCategoria());
+        assertEquals(nombreNuevo.trim().toLowerCase(), categoria.getCategoria());
 
         verify(categoriaRepository).save(categoria);
 
@@ -139,13 +129,12 @@ public class CategoriaServiceTest{
 
     @Test
     void test08_noSePuedeModificarElNombreDeUnaCategoriaExistenteSiElNombreYaExiste(){
-        String nuevoNombre = nombreCategoria;
-        Categoria nuevaCat = new Categoria(nuevoNombre);
-        when(categoriaRepository.existsByCategoria(nombreCategoria)).thenReturn(true);
-        when(categoriaRepository.existsByCategoria(nuevoNombre)).thenReturn(true);
+        nombreNuevo = nombreCategoria;
+        when(categoriaRepository.existsByCategoria(nombreCategoria.trim().toLowerCase())).thenReturn(true);
+        when(categoriaRepository.existsByCategoria(nombreNuevo.trim().toLowerCase())).thenReturn(true);
 
         assertThrows(RuntimeException.class,()->{
-            categoriaService.cambiarNombreDeCategoria(nombreCategoria, nuevoNombre);
+            categoriaService.cambiarNombreDeCategoria(nombreCategoria, nombreNuevo);
         });
 
         verify(categoriaRepository,never()).save(any());
@@ -153,11 +142,10 @@ public class CategoriaServiceTest{
 
     @Test
     void test09_noSePuedeModificarElNombreDeUnaCategoriaQueNoExiste(){
-        String nuevoNombre = "Nuevo";
-        when(categoriaRepository.findOneByCategoria(nombreCategoria)).thenReturn(Optional.empty());
+        when(categoriaRepository.findOneByCategoriaIgnoreCase(nombreCategoria)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, ()->{
-            categoriaService.cambiarNombreDeCategoria(nombreCategoria, nuevoNombre);
+            categoriaService.cambiarNombreDeCategoria(nombreCategoria, nombreNuevo);
         });
 
         verify(categoriaRepository, never()).save(any());

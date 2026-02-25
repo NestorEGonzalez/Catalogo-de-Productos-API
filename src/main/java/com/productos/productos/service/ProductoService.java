@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.productos.productos.exception.ErrorCampoVacioONulo;
 import com.productos.productos.exception.ErrorCategoriaInexistente;
 import com.productos.productos.exception.ErrorNombreProductoExistente;
 import com.productos.productos.exception.ErrorProductoConIdInexistente;
@@ -48,8 +49,11 @@ public class ProductoService {
     }
 
     private void verificarNombre(String nombreProd) {
-        if (productoRepository.existsByNombre(nombreProd)) {
-            throw new ErrorNombreProductoExistente(nombreProd);
+        if (nombreProd == null) {
+            throw new ErrorCampoVacioONulo(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO);
+        }
+        if (productoRepository.existsByNombre(nombreProd.trim().toLowerCase())) {
+            throw new ErrorNombreProductoExistente(nombreProd.trim().toLowerCase());
         }
     }
 

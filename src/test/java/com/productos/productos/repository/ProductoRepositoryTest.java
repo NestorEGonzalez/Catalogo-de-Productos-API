@@ -64,8 +64,6 @@ public class ProductoRepositoryTest extends TestBase {
 
         assertEquals(producto.getId(), productoRepository.findOneByNombreIgnoreCase(nombre).get().getId());
 
-    
-
     }
     
     @Test
@@ -86,7 +84,7 @@ public class ProductoRepositoryTest extends TestBase {
         Producto prod2 = new Producto("Prod2", (new BigDecimal("40")),categoria);
         
         Producto producto1 = productoRepository.save(prod);
-        Producto producto2 = productoRepository.save(prod2);
+        productoRepository.save(prod2);
 
         assertEquals(2, productoRepository.count());
 
@@ -94,12 +92,10 @@ public class ProductoRepositoryTest extends TestBase {
 
         assertEquals(1, productoRepository.count());
 
-
     }
 
     @Test
     void test05_sePuedeModificarUnProducto(){
-        
         Producto productoGuardado = productoRepository.save(prod); 
         Producto prodModificado = productoRepository.findOneByNombreIgnoreCase(nombre).get();
         
@@ -153,6 +149,7 @@ public class ProductoRepositoryTest extends TestBase {
             productoRepository.save(new Producto("", precio,categoria));
         });
 
+        assertEquals(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO,errorNombreNulo.getMessage());
         assertEquals(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO, errorNombreVacio.getMessage());
     }
 
@@ -200,8 +197,6 @@ public class ProductoRepositoryTest extends TestBase {
         productoRepository.save(prod3);
 
         assertEquals(3, productoRepository.count());
-
-        //assertEquals(2, productoRepository.findByNombreContainingIgnoreCase("producto").size());
         assertEquals(2, productoRepository.buscarPorNombreConCategoria(nombre).size());
 
     }
