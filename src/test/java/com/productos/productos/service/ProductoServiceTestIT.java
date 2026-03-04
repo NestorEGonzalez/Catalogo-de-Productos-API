@@ -53,7 +53,7 @@ public class ProductoServiceTestIT extends TestBase{
 
         assertEquals(1, productoService.obtenerTodosLosProductos().size());
         assertNotNull(prod);
-        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria());
+        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria().getCategoria());
         assertEquals(precioProd,  productoService.buscarProductoConId(prod.getId()).get().getPrecio());
         assertEquals(nombreProd.trim().toLowerCase(),  productoService.buscarProductoConId(prod.getId()).get().getNombre());
         
@@ -127,7 +127,7 @@ public class ProductoServiceTestIT extends TestBase{
 
         assertEquals(nombreNuevo.trim().toLowerCase(), productoService.buscarProductoConId(prod.getId()).get().getNombre());
         assertEquals(nuevoPrecio, productoService.buscarProductoConId(prod.getId()).get().getPrecio());
-        assertEquals(catNueva.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria());
+        assertEquals(catNueva.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria().getCategoria());
 
     }
 
@@ -176,7 +176,7 @@ public class ProductoServiceTestIT extends TestBase{
         });
 
         assertEquals("La categoria con id: 99, no existe.", errorCategoriaInexistente.getMessage());
-        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria());
+        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria().getCategoria());
         
     }
 

@@ -45,6 +45,7 @@ public class CategoriaControllerTestIT extends TestBase{
     String errorCatExistente;
     String errorCatInexistente;
     Long idInexistente;
+    private static final String URL_BASE = "/productos/categorias";
     
     @BeforeEach
     void setUp(){
@@ -58,7 +59,7 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_sePuedeCrearUnaCategoriaYSeObtieneLaCategoriaYElCodigo201() throws Exception{
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                         .andExpect(status().isCreated())
@@ -70,12 +71,12 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_noSeCreanCategoriasConElMismoNombreYSeObtieneUnError() throws Exception{
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                         .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                         .andExpect(status().isConflict())
@@ -84,13 +85,13 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_noSePuedeCrearUnaCategoriaConNombreNullOVacio() throws Exception{
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(null))))
                         .andExpect(status().isBadRequest())
                         .andExpect(jsonPath("$.mensaje").value(errorCategoriaNulaOVacia));
         
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoriaRequest(""))))
                     .andExpect(status().isBadRequest())
@@ -99,17 +100,17 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_sePuedenObtenerTodasLasCategoriasYUnHTTPStatusCode200() throws Exception{
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(otraCat))))
                         .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/productos/categorias")
+        mockMvc.perform(get(URL_BASE)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(2)))
@@ -120,7 +121,7 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_sePuedeEliminarUnaCategoriaExistenteYSeObtieneUnHTTPStatusCode200() throws Exception{
-        String catGuardada = mockMvc.perform(post("/productos/categorias")
+        String catGuardada = mockMvc.perform(post(URL_BASE)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                                     .andExpect(status().isCreated())
@@ -128,15 +129,15 @@ public class CategoriaControllerTestIT extends TestBase{
         
         Categoria categoria = objectMapper.readValue(catGuardada, Categoria.class);
 
-        mockMvc.perform(get("/productos/categorias").
+        mockMvc.perform(get(URL_BASE).
                             contentType(MediaType.APPLICATION_JSON))
                             .andExpect(status().isOk())
                             .andExpect(jsonPath("$",hasSize(1)));
 
-        mockMvc.perform(delete("/productos/categorias/"+categoria.getId() ))
+        mockMvc.perform(delete(URL_BASE+"/"+categoria.getId()))
                         .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/productos/categorias").
+        mockMvc.perform(get(URL_BASE).
                     contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(0)));
@@ -145,15 +146,15 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_noSePuedeEliminarUnaCategoriaInexistenteYSeObtieneUnError() throws Exception {
-    mockMvc.perform(delete("/productos/categorias/" + idInexistente)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.mensaje").value(errorCatInexistente));
+        mockMvc.perform(delete(URL_BASE+"/" + idInexistente)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje").value(errorCatInexistente));
     }
 
     @Test
     void test_sePuedeModificarUnaCategoriaExistenteYSeObtieneUnHTTPStatusCode200() throws Exception{
-        String catGuardada = mockMvc.perform(post("/productos/categorias")
+        String catGuardada = mockMvc.perform(post(URL_BASE)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                                     .andExpect(status().isCreated())
@@ -161,7 +162,7 @@ public class CategoriaControllerTestIT extends TestBase{
 
         Categoria cat = objectMapper.readValue(catGuardada, Categoria.class);
 
-        mockMvc.perform(patch("/productos/categorias/"+cat.getId())
+        mockMvc.perform(patch(URL_BASE+"/"+cat.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoriaRequest(otraCat))))
                     .andExpect(status().isOk())
@@ -174,7 +175,7 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_noSePuedeModificarUnaCategoriaInexistenteYSeObtieneUnError() throws Exception{
-        mockMvc.perform(patch("/productos/categorias/"+idInexistente)
+        mockMvc.perform(patch(URL_BASE+"/"+idInexistente)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                     .andExpect(status().isNotFound())
@@ -184,12 +185,12 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_noSePuedeCambiarElNombreDeLaCategoriaSiEstaDuplicadoYSeObtieneUnError() throws Exception {    
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                         .andExpect(status().isCreated()); 
         
-        String otraCategoriaString = mockMvc.perform(post("/productos/categorias")
+        String otraCategoriaString = mockMvc.perform(post(URL_BASE)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(new CategoriaRequest(otraCat))))
                                 .andExpect(status().isCreated())
@@ -197,7 +198,7 @@ public class CategoriaControllerTestIT extends TestBase{
         
         Categoria categoria = objectMapper.readValue(otraCategoriaString, Categoria.class); 
         
-        mockMvc.perform(patch("/productos/categorias/" + categoria.getId())
+        mockMvc.perform(patch(URL_BASE+"/" + categoria.getId())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                         .andExpect(status().isConflict())
@@ -207,47 +208,49 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_sePuedeFiltrarLasCategoriasQueContienenUnaPalabraEnSuNombre() throws Exception{
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                         .andExpect(status().isCreated()); 
         
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest(otraCat))))
                         .andExpect(status().isCreated()); 
         
-        mockMvc.perform(post("/productos/categorias")
+        mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new CategoriaRequest("Categoria 2"))))
                         .andExpect(status().isCreated()); 
+        
         String catABuscar = "catego";
-        mockMvc.perform(get("/productos/categorias/filtrar/"+catABuscar))
+
+        mockMvc.perform(get(URL_BASE+"/filtrar/"+catABuscar))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(2)));
     }
 
     @Test
     void test_sePuedeObtenerUnaCategoriaPorId() throws Exception{
-        String otraCategoriaString = mockMvc.perform(post("/productos/categorias")
+        String otraCategoriaString = mockMvc.perform(post(URL_BASE)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(new CategoriaRequest(otraCat))))
                                 .andExpect(status().isCreated())
                                 .andReturn().getResponse().getContentAsString(); 
         Categoria categoriaOtra = objectMapper.readValue(otraCategoriaString, Categoria.class); 
 
-        String categoriaString = mockMvc.perform(post("/productos/categorias")
+        String categoriaString = mockMvc.perform(post(URL_BASE)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(new CategoriaRequest(nombreCat))))
                                 .andExpect(status().isCreated())
                                 .andReturn().getResponse().getContentAsString(); 
         Categoria categoria = objectMapper.readValue(categoriaString, Categoria.class); 
 
-        mockMvc.perform(get("/productos/categorias/"+categoria.getId()))
+        mockMvc.perform(get(URL_BASE+"/"+categoria.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoria").value(categoria.getCategoria()));
         
-        mockMvc.perform(get("/productos/categorias/"+categoriaOtra.getId()))
+        mockMvc.perform(get(URL_BASE+"/"+categoriaOtra.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoria").value(categoriaOtra.getCategoria()));
 
@@ -255,7 +258,7 @@ public class CategoriaControllerTestIT extends TestBase{
 
     @Test
     void test_noSeObtieneUnaCategoriaSiSuIdEsInexistenteYSeObtieneUnError() throws Exception{
-        mockMvc.perform(get("/productos/categorias/"+idInexistente))
+        mockMvc.perform(get(URL_BASE+"/"+idInexistente))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value(errorCatInexistente));
 

@@ -15,28 +15,34 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.productos.productos.dto.CategoriaRequest;
-import com.productos.productos.model.Categoria;
+import com.productos.productos.dto.CategoriaResponse;
+import com.productos.productos.mapper.CategoriaMapper;
 import com.productos.productos.service.CategoriaService;
 
 import jakarta.validation.Valid;
 
 @RestController
 public class CategoriaController {
+    private static final String URL_BASE = "/productos/categorias";
+
     private final CategoriaService categoriaService;
+    private final CategoriaMapper categoriaMapper;
     
-    public CategoriaController(CategoriaService categoriaService){
+    public CategoriaController(CategoriaService categoriaService, CategoriaMapper categoriaMapper){
         this.categoriaService = categoriaService;
+        this.categoriaMapper = categoriaMapper;
     }
 
-    @GetMapping("/productos/categorias")
-    public ResponseEntity<List<Categoria>> obtenerCategorias(){
-        List<Categoria> listaDeCategorias = categoriaService.obtenerTodasLasCategorias();
+    @GetMapping(URL_BASE)
+    public ResponseEntity<List<CategoriaResponse>> obtenerCategorias(){
+        List<CategoriaResponse> listaDeCategorias = categoriaMapper.toResponse(categoriaService.obtenerTodasLasCategorias());
+
         return ResponseEntity.ok(listaDeCategorias);
     }
 
-    @PostMapping("/productos/categorias")
-    public ResponseEntity<Categoria> crearCategoria(@Valid @RequestBody CategoriaRequest categoria ){
-        Categoria cat = categoriaService.crearCategoria(categoria.categoria());
+    @PostMapping(URL_BASE)
+    public ResponseEntity<CategoriaResponse> crearCategoria(@Valid @RequestBody CategoriaRequest categoria ){
+        CategoriaResponse cat = categoriaMapper.toResponse(categoriaService.crearCategoria(categoria.categoria()));
         URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("{id}")
@@ -45,27 +51,27 @@ public class CategoriaController {
         return ResponseEntity.created(location).body(cat);
     }
 
-    @DeleteMapping("/productos/categorias/{id}")
+    @DeleteMapping(URL_BASE+"/{id}")
     public ResponseEntity<HttpStatus> borrarCategoria(@PathVariable Long id){
         categoriaService.eliminarCategoria(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/productos/categorias/{id}")
-    public ResponseEntity<Categoria> modificarCategoria(@PathVariable Long id,@Valid @RequestBody CategoriaRequest categoria){
-        Categoria cat = categoriaService.cambiarNombreDeCategoriaPorId(id, categoria.categoria());
+    @PatchMapping(URL_BASE+"/{id}")
+    public ResponseEntity<CategoriaResponse> modificarCategoria(@PathVariable Long id,@Valid @RequestBody CategoriaRequest categoria){
+        CategoriaResponse cat = categoriaMapper.toResponse(categoriaService.cambiarNombreDeCategoriaPorId(id, categoria.categoria()));
         return ResponseEntity.ok(cat);
     }
 
-    @GetMapping("/productos/categorias/filtrar/{cat}")
-    public ResponseEntity<List<Categoria>> filtrarCategorias(@Valid @PathVariable String cat){
-        List<Categoria> cats = categoriaService.buscarCategoriasQueContengan(cat);
+    @GetMapping(URL_BASE+"/filtrar/{cat}")
+    public ResponseEntity<List<CategoriaResponse>> filtrarCategorias(@Valid @PathVariable String cat){
+        List<CategoriaResponse> cats = categoriaMapper.toResponse(categoriaService.buscarCategoriasQueContengan(cat));
         return ResponseEntity.ok(cats);
     }
 
-    @GetMapping("/productos/categorias/{id}")
-    public ResponseEntity<Categoria> buscarCategoriaPorId(@PathVariable Long id){
-        Categoria cat = categoriaService.buscarCategoriaPorId(id);
+    @GetMapping(URL_BASE+"/{id}")
+    public ResponseEntity<CategoriaResponse> buscarCategoriaPorId(@PathVariable Long id){
+        CategoriaResponse cat = categoriaMapper.toResponse(categoriaService.buscarCategoriaPorId(id));
         return ResponseEntity.ok(cat);
     }
 }

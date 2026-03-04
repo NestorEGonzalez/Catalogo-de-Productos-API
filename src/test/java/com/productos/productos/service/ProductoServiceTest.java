@@ -74,7 +74,7 @@ public class ProductoServiceTest {
         assertNotNull(prodDelService);
         assertEquals(nombreProd.trim().toLowerCase(), prodDelService.getNombre());
         assertEquals(precio, prodDelService.getPrecio());
-        assertEquals(nombreCat.trim().toLowerCase(), prodDelService.getCategoria());
+        assertEquals(nombreCat.trim().toLowerCase(), prodDelService.getCategoria().getCategoria());
         verify(productoRepository, times(1)).save(any(Producto.class));
     }
 
@@ -146,7 +146,7 @@ public class ProductoServiceTest {
 
     assertEquals(nombreNuevo.trim().toLowerCase(), producto.getNombre());
     assertEquals(precioNuevo, producto.getPrecio());
-    assertEquals(nombreCatNuevo.trim().toLowerCase(), producto.getCategoria());
+    assertEquals(nombreCatNuevo.trim().toLowerCase(), producto.getCategoria().getCategoria());
 
     
     verify(productoRepository, atLeastOnce()).save(producto);

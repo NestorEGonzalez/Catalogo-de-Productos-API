@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 
@@ -25,6 +26,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO)
     @Column(unique = true, nullable = false)
     private String nombre;
 
@@ -52,8 +54,8 @@ public class Producto {
         return this.precio;
     }
 
-    public String getCategoria(){
-        return this.categoria != null ? this.categoria.getCategoria(): null;
+    public Categoria getCategoria(){
+        return this.categoria != null ? this.categoria: null;
     }
 
 
@@ -64,7 +66,11 @@ public class Producto {
     }
 
     private void validarNombre(String nombre) {
-        if (nombre == null|| nombre.isEmpty() || nombre.isBlank()) {
+        if (nombre == null) {
+            throw new ErrorCampoVacioONulo(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO);
+            
+        }
+        if (nombre.isEmpty() || nombre.isBlank()) {
             throw new ErrorCampoVacioONulo(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO);
         }
         
