@@ -106,8 +106,6 @@ public class ProductoServiceTest {
     void test_NoSePuedeBorrarUnProductoQueNoExiste(){
         Long idProd = 1L;
         
-        //String mensajeEsperado ="El producto con id "+idProd+", no existe.";
-
         when(productoRepository.existsById(idProd)).thenReturn(false);
 
         assertThrows(ErrorProductoConIdInexistente.class,()->{

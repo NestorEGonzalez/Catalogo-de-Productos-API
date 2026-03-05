@@ -2,7 +2,6 @@ package com.productos.productos.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import com.productos.productos.model.Categoria;
 import com.productos.productos.model.Producto;
 import com.productos.productos.repository.CategoriaRepository;
 import com.productos.productos.repository.ProductoRepository;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -33,6 +33,7 @@ public class ProductoService {
     @Transactional
     public Producto crearProducto(String nombreProd, BigDecimal precio, Long idCat) {
         verificarNombre(nombreProd);
+        verificarNombreExistente(nombreProd);
         Categoria cat = obtenerCategoriaPorId(idCat);
         
         return productoRepository.save(new Producto(nombreProd,precio,cat));
@@ -52,6 +53,10 @@ public class ProductoService {
         if (nombreProd == null) {
             throw new ErrorCampoVacioONulo(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO);
         }
+        
+    }
+
+    private void verificarNombreExistente(String nombreProd){
         if (productoRepository.existsByNombre(nombreProd.trim().toLowerCase())) {
             throw new ErrorNombreProductoExistente(nombreProd.trim().toLowerCase());
         }
@@ -73,6 +78,7 @@ public class ProductoService {
     public void cambiarNombreDeProducto(Long idProd, String nombreNuevo) {
         Producto producto = obtenerProductoConId(idProd);
         verificarNombre(nombreNuevo);
+        verificarNombreExistente(nombreNuevo);
         producto.setNombre(nombreNuevo);
         productoRepository.save(producto);
     }
@@ -94,6 +100,7 @@ public class ProductoService {
         productoRepository.save(producto);
     }
 
+    @Transactional
     public void cambiarPrecioDeProducto(Long idProd, BigDecimal precioNuevo) {
         Producto producto = obtenerProductoConId(idProd);
         producto.setPrecio(precioNuevo);
@@ -103,8 +110,8 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
-    public Optional<Producto> buscarProductoConId(Long id) {
-        return productoRepository.findById(id);
+    public Producto buscarProductoConId(Long id) {
+        return productoRepository.findById(id).orElseThrow(()->{throw new ErrorProductoConIdInexistente(id);});
     }
 
     public List<Producto> obtenerProductosDeCategoria(Long id) {
@@ -112,15 +119,30 @@ public class ProductoService {
         return productoRepository.findAllByCategoria(cat);
     }
 
-    public void actualizarCategoriaDeProductos(Long id, Long id2) {
-        Categoria cat1 = obtenerCategoriaPorId(id);
-        Categoria cat2 = obtenerCategoriaPorId(id2);
-        productoRepository.actualizarCategoria(cat2, cat1);
+    @Transactional
+    public void actualizarCategoriaDeProductos(Long idCatVieja, Long idCatNueva) {
+        Categoria catVieja = obtenerCategoriaPorId(idCatVieja);
+        Categoria catNueva = obtenerCategoriaPorId(idCatNueva);
+        productoRepository.actualizarCategoria(catNueva, catVieja);
         
     }
 
     public List<Producto> obtenerProductosConNombre(String nombre) {
         return productoRepository.findByNombreContainingIgnoreCase(nombre);
+
+    }
+
+    @Transactional
+    public Producto modificarDatosDeProducto(Long id, String nombre, BigDecimal precio, Long idCat) {
+        Producto prod = obtenerProductoConId(id);
+        if (!prod.getNombre().equals(nombre.trim().toLowerCase())) {
+            cambiarNombreDeProducto(id, nombre);
+        }
+        if (!prod.getCategoria().getId().equals(idCat)) {
+            cambiarCategoriaDeProducto(id, idCat);
+        }
+        cambiarPrecioDeProducto(id, precio);
+        return productoRepository.save(prod);
 
     }
     

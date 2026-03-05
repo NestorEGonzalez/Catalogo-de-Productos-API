@@ -74,4 +74,5 @@ public class CategoriaController {
         CategoriaResponse cat = categoriaMapper.toResponse(categoriaService.buscarCategoriaPorId(id));
         return ResponseEntity.ok(cat);
     }
+
 }

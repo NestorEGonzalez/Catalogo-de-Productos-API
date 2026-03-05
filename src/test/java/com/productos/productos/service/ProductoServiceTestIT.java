@@ -53,9 +53,9 @@ public class ProductoServiceTestIT extends TestBase{
 
         assertEquals(1, productoService.obtenerTodosLosProductos().size());
         assertNotNull(prod);
-        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria().getCategoria());
-        assertEquals(precioProd,  productoService.buscarProductoConId(prod.getId()).get().getPrecio());
-        assertEquals(nombreProd.trim().toLowerCase(),  productoService.buscarProductoConId(prod.getId()).get().getNombre());
+        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).getCategoria().getCategoria());
+        assertEquals(precioProd,  productoService.buscarProductoConId(prod.getId()).getPrecio());
+        assertEquals(nombreProd.trim().toLowerCase(),  productoService.buscarProductoConId(prod.getId()).getNombre());
         
     }
 
@@ -125,9 +125,9 @@ public class ProductoServiceTestIT extends TestBase{
         productoService.cambiarPrecioDeProducto(prod.getId(), nuevoPrecio);
         productoService.cambiarNombreDeProducto(prod.getId(), nombreNuevo);
 
-        assertEquals(nombreNuevo.trim().toLowerCase(), productoService.buscarProductoConId(prod.getId()).get().getNombre());
-        assertEquals(nuevoPrecio, productoService.buscarProductoConId(prod.getId()).get().getPrecio());
-        assertEquals(catNueva.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria().getCategoria());
+        assertEquals(nombreNuevo.trim().toLowerCase(), productoService.buscarProductoConId(prod.getId()).getNombre());
+        assertEquals(nuevoPrecio, productoService.buscarProductoConId(prod.getId()).getPrecio());
+        assertEquals(catNueva.getCategoria(), productoService.buscarProductoConId(prod.getId()).getCategoria().getCategoria());
 
     }
 
@@ -145,7 +145,7 @@ public class ProductoServiceTestIT extends TestBase{
 
         assertEquals(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO, errorNombreNulo.getMessage());
         assertEquals(ErrorCampoVacioONulo.ERROR_CAMPO_VACIO_NULO, errorNombreVacio.getMessage());
-        assertEquals(nombreProd.trim().toLowerCase(), productoService.buscarProductoConId(prod.getId()).get().getNombre());
+        assertEquals(nombreProd.trim().toLowerCase(), productoService.buscarProductoConId(prod.getId()).getNombre());
 
     }
 
@@ -163,7 +163,7 @@ public class ProductoServiceTestIT extends TestBase{
 
         assertEquals(ErrorPrecioInvalido.ERROR_PRECIO_NEGATIVO, errorPrecioNegativo.getMessage());
         assertEquals(ErrorPrecioInvalido.ERROR_PRECIO_NULO, errorPrecioNulo.getMessage());
-        assertEquals(precioProd, productoService.buscarProductoConId(prod.getId()).get().getPrecio());
+        assertEquals(precioProd, productoService.buscarProductoConId(prod.getId()).getPrecio());
 
     }
 
@@ -176,7 +176,7 @@ public class ProductoServiceTestIT extends TestBase{
         });
 
         assertEquals("La categoria con id: 99, no existe.", errorCategoriaInexistente.getMessage());
-        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).get().getCategoria().getCategoria());
+        assertEquals(cat.getCategoria(), productoService.buscarProductoConId(prod.getId()).getCategoria().getCategoria());
         
     }
 

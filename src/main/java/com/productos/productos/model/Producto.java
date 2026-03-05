@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 
@@ -30,6 +31,7 @@ public class Producto {
     @Column(unique = true, nullable = false)
     private String nombre;
 
+    @PositiveOrZero(message = ErrorPrecioInvalido.ERROR_PRECIO_NEGATIVO)
     private BigDecimal precio;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
