@@ -58,6 +58,7 @@ public class CategoriaControllerTestIT extends TestBase{
     }
 
     @Test
+    //@WithMockUser(roles = "ADMIN")
     void test_sePuedeCrearUnaCategoriaYSeObtieneLaCategoriaYElCodigo201() throws Exception{
         mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)

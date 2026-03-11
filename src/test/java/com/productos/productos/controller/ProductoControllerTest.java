@@ -22,10 +22,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
 
 import com.productos.productos.dto.ProductoRequest;
 import com.productos.productos.dto.ProductoResponse;
@@ -37,11 +38,13 @@ import com.productos.productos.exception.ErrorProductoConIdInexistente;
 import com.productos.productos.mapper.ProductoMapper;
 import com.productos.productos.model.Categoria;
 import com.productos.productos.model.Producto;
-
+import com.productos.productos.security.JwtAuthFilter;
 import com.productos.productos.service.ProductoService;
 
 import tools.jackson.databind.ObjectMapper;
-@WebMvcTest(ProductoController.class)
+@WebMvcTest(value =ProductoController.class,excludeFilters = {
+                                                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthFilter.class)
+})
 @AutoConfigureMockMvc(addFilters = false)
 
 

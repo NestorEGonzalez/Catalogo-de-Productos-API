@@ -48,6 +48,11 @@ public class GlobalExceptionHandler {
     return buildResponse(ex.getMessage(), HttpStatus.CONFLICT);
    }
 
+   @ExceptionHandler({ErrorUsuarioNoValido.class})
+   public ResponseEntity<ErrorResponse> usuarioInvalido(RuntimeException ex){
+    return buildResponse(ex.getMessage(),HttpStatus.CONFLICT);
+   }
+
     private ResponseEntity<ErrorResponse> buildResponse(String mensaje, HttpStatus status) {
         ErrorResponse errorResponse = new ErrorResponse(
                                 status.value(),

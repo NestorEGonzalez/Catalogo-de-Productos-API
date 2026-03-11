@@ -19,8 +19,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -30,19 +33,21 @@ import com.productos.productos.dto.CategoriaRequest;
 import com.productos.productos.dto.CategoriaResponse;
 import com.productos.productos.exception.ErrorCampoVacioONulo;
 import com.productos.productos.exception.ErrorCategoriaInexistente;
-//import com.productos.productos.exception.ErrorCategoriaInexistente;
 import com.productos.productos.exception.ErrorCategoriaYaExistente;
 import com.productos.productos.mapper.CategoriaMapper;
 import com.productos.productos.model.Categoria;
 import com.productos.productos.repository.CategoriaRepository;
+import com.productos.productos.security.JwtAuthFilter;
 import com.productos.productos.service.CategoriaService;
 
 import tools.jackson.databind.ObjectMapper;
 
 
-
-@WebMvcTest(CategoriaController.class)
+@WebMvcTest(value=CategoriaController.class, excludeFilters = {
+                                                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthFilter.class)
+})
 @AutoConfigureMockMvc(addFilters = false)
+
 
 public class CategoriaControllerTest {
 
@@ -94,6 +99,7 @@ public class CategoriaControllerTest {
 
         @Test
         @DisplayName("Devuelve todas las categorias")
+        
         void test_obtenerTodasLasCategorias() throws Exception{
                 ReflectionTestUtils.setField(cat1,"id", 1L);
                 ReflectionTestUtils.setField(cat2,"id", 2L);
