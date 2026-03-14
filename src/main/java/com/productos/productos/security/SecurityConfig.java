@@ -32,6 +32,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        System.out.println(">> SEGURIDAD CARGADA");
         httpSecurity
                     .csrf(csrf -> csrf.disable()) // desactiva CSRF, es deir esta API no utiliza sesiones de navegador (con cookis por ej)
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //indica que no se guarda estado en el server, todo se maneja con JWT token.
@@ -66,7 +67,7 @@ public class SecurityConfig {
 
     //Exponer el AuthenticationManager que coordina todo el proceso de autenticacion
     @Bean
-    public AuthenticationManager authenicationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
         return config.getAuthenticationManager();
     }
 

@@ -24,8 +24,11 @@ public class JwtAuthFilter extends OncePerRequestFilter{ //OncePerRequestFilter 
         this.jwtUil = jwtUtil;
     }
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+        System.out.println(">> REQUEST: " + request.getMethod() + " " + request.getRequestURI());
+        System.out.println(">> AUTH HEADER: " + request.getHeader("Authorization"));
         String authHeader = request.getHeader("Authorization"); //Busar el header "Authorization", el header debe tener el formato: Authorization: Bearer <token> es como un estandar
 
         if (authHeader == null || !authHeader.startsWith("Bearer")) { //Si no tiene header o no comienza con bearer lo manda a filterChain, es decir, deja pasar la request sin autorizacion

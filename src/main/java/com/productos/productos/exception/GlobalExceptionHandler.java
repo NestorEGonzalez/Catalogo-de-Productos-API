@@ -12,12 +12,12 @@ import com.productos.productos.dto.ErrorResponse;
 
 public class GlobalExceptionHandler {
     
-    @ExceptionHandler({ErrorCategoriaYaExistente.class})
+    @ExceptionHandler({ErrorCategoriaYaExistente.class, ErrorNombreProductoExistente.class, ErrorUsuarioNoValido.class})
     public ResponseEntity<ErrorResponse> duplicado(RuntimeException ex){
         return buildResponse(ex.getMessage(), HttpStatus.CONFLICT);
    }
 
-    @ExceptionHandler({ErrorCategoriaInexistente.class})
+    @ExceptionHandler({ErrorCategoriaInexistente.class, ErrorProductoConIdInexistente.class})
     public ResponseEntity<ErrorResponse> catInexistente(RuntimeException ex){
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
    }
@@ -28,29 +28,9 @@ public class GlobalExceptionHandler {
         return buildResponse(msj, HttpStatus.BAD_REQUEST);
    }
 
-   @ExceptionHandler({ErrorProductoConIdInexistente.class})
-   public ResponseEntity<ErrorResponse> prodConIdInexistente(RuntimeException ex){
-    return buildResponse(ex.getMessage(),HttpStatus.NOT_FOUND);
-   }
-
-   @ExceptionHandler({ErrorCampoVacioONulo.class})
+   @ExceptionHandler({ErrorCampoVacioONulo.class, ErrorPrecioInvalido.class})
    public ResponseEntity<ErrorResponse> campoVacioONulo(RuntimeException ex){
     return buildResponse(ex.getMessage(),HttpStatus.BAD_REQUEST);
-   }
-
-   @ExceptionHandler({ErrorPrecioInvalido.class})
-   public ResponseEntity<ErrorResponse> precioInvalido(RuntimeException ex){
-    return buildResponse(ex.getMessage(),HttpStatus.BAD_REQUEST);
-   }
-
-   @ExceptionHandler({ErrorNombreProductoExistente.class})
-   public ResponseEntity<ErrorResponse> nombreDeProdYaExistente(RuntimeException ex){
-    return buildResponse(ex.getMessage(), HttpStatus.CONFLICT);
-   }
-
-   @ExceptionHandler({ErrorUsuarioNoValido.class})
-   public ResponseEntity<ErrorResponse> usuarioInvalido(RuntimeException ex){
-    return buildResponse(ex.getMessage(),HttpStatus.CONFLICT);
    }
 
     private ResponseEntity<ErrorResponse> buildResponse(String mensaje, HttpStatus status) {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,10 +24,12 @@ import com.productos.productos.service.ProductoService;
 import jakarta.validation.Valid;
 
 @RestController
+@RequestMapping("/productos")
+
 public class ProductoController {
     private final ProductoService productoService;
     private final ProductoMapper productoMapper;
-    private static final String URL_BASE = "/productos/productos";
+    private static final String URL_BASE = "/productos";
 
     public ProductoController(ProductoService productoService, ProductoMapper productoMapper){
         this.productoService = productoService;
