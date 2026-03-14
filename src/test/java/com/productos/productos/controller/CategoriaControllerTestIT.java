@@ -39,6 +39,7 @@ public class CategoriaControllerTestIT extends TestBase{
      @Autowired
     private ObjectMapper objectMapper;
 
+    
     String nombreCat;
     String otraCat;
     String errorCategoriaNulaOVacia;
@@ -58,7 +59,6 @@ public class CategoriaControllerTestIT extends TestBase{
     }
 
     @Test
-    //@WithMockUser(roles = "ADMIN")
     void test_sePuedeCrearUnaCategoriaYSeObtieneLaCategoriaYElCodigo201() throws Exception{
         mockMvc.perform(post(URL_BASE)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +68,8 @@ public class CategoriaControllerTestIT extends TestBase{
                         .andExpect(jsonPath("$.id").isNumber())
                         .andExpect(jsonPath("$.categoria").value(nombreCat.trim().toLowerCase()))
                         .andExpect(header().exists("Location"));
-    }
+    }           
+
 
     @Test
     void test_noSeCreanCategoriasConElMismoNombreYSeObtieneUnError() throws Exception{

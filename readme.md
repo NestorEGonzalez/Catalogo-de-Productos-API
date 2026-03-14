@@ -2,57 +2,52 @@
 
 # 📦 API Catálogo de Productos
 
-Este proyecto es una API REST desarrollada en **Java 17 con Spring Boot** que implementa un catálogo de productos.  
-Forma parte de mi portfolio y está orientado a demostrar buenas prácticas de arquitectura, **TDD** y testing reproducible con **Testcontainers**.
+API REST desarrollada en **Java 17 con Spring Boot**, que implementa un catálogo de productos con enfoque en **arquitectura limpia, TDD y reproducibilidad de tests con Testcontainers**.  
+Forma parte de mi portfolio y refleja buenas prácticas de desarrollo, documentación y despliegue en contenedores.
 
 ---
 
 ## 🚀 Tecnologías utilizadas
 - Java 17
-- Spring Boot
+- Spring Boot 3.2.2
 - JPA/Hibernate
 - PostgreSQL
 - Testcontainers (Docker)
 - Maven
+- OpenAPI (documentación)
 
 ---
 
 ## 📂 Arquitectura
-El proyecto sigue una separación clara por capas:
-- **Entity** → Definición de modelos y anotaciones JPA.
+Separación clara por capas:
+- **Entity** → Modelos y anotaciones JPA.
 - **Repository** → Acceso a datos con Spring Data JPA.
 - **Service** → Lógica de negocio y validaciones.
 - **Controller** → Endpoints REST.
-- **Exception** → Manejo centralizado de errores y mensajes consistentes.
+- **Exception** → Manejo centralizado de errores.
 
 ---
 
 ## 🧪 Testing
-- Pruebas unitarias de repositorios (Categoría y Producto).
-- Pruebas de integración con **Testcontainers** para garantizar reproducibilidad.
+- Pruebas unitarias de repositorios, servicios y controladores.
+- Pruebas de integración con **Testcontainers** (PostgreSQL).
 - Desarrollo guiado por pruebas (**TDD**).
 - Validación de endpoints REST con **MockMvc**.
 
 ---
 
 ## 📌 Funcionalidades actuales
-- Configuración de Testcontainers con PostgreSQL.
-- Pruebas unitarias de repositorios.
-- Pruebas unitarias e integración de servicios (Categoría y Producto).
-- Pruebas unitarias e integración de controllers (Categoría y Producto).
+- Autenticación y autorización con **JWT**.
+- Usuario administrador creado por defecto al iniciar la aplicación.
+- Endpoints protegidos para operaciones de modificación.
+- Documentación con **OpenAPI** (`openapi.yaml`).
+- Despliegue completo en contenedores Docker (API + PostgreSQL).
 
 ---
 
 ## 🎯 Objetivo
-Construir un catálogo de productos mantenible y escalable que servirá como base para un sistema de gestión de stock en otro proyecto.
+Construir un catálogo de productos mantenible y escalable, base para futuros sistemas de gestión de stock.
 
 ---
 
-## 🔮 Próximos pasos
-- Seguridad con autenticación de usuario y contraseña para edición.
-- Documentación con Swagger/OpenAPI.
-- Despliegue en Docker.
-
----
-
-⚠️ **Estado actual**: El proyecto está en desarrollo. Se irán sumando nuevas funcionalidades y mejoras.
+⚠️ **Estado actual**: Proyecto finalizado y disponible para pruebas en Docker.

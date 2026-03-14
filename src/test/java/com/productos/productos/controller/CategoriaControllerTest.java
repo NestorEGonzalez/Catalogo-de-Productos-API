@@ -29,6 +29,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+
 import com.productos.productos.dto.CategoriaRequest;
 import com.productos.productos.dto.CategoriaResponse;
 import com.productos.productos.exception.ErrorCampoVacioONulo;
@@ -47,7 +48,6 @@ import tools.jackson.databind.ObjectMapper;
                                                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthFilter.class)
 })
 @AutoConfigureMockMvc(addFilters = false)
-
 
 public class CategoriaControllerTest {
 
